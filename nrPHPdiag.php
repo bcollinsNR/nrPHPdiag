@@ -2,8 +2,8 @@
 
 // ******************************** New Relic ********************************
 //
-// PHP Agent Diagnostic Tool v 0.3.2
-// Author: Tony Mayse 
+// PHP Agent Diagnostic Tool v 0.3.3
+// Author: Tony Mayse, Brian Collins, Steven Minor
 //
 // ***************************************************************************
 //
@@ -23,7 +23,9 @@ $nrMessages = "";
 $nrInitialAppName = ini_get('newrelic.appname'); // saving it since it's about to change
 
 // record all metrics as "New Relic PHP Diagnostic"
-newrelic_set_appname("New Relic PHP Diagnostic");
+if (extension_loaded('newrelic')) {
+  newrelic_set_appname("New Relic PHP Diagnostic");  
+}
 
 // CONSTANTS
 
@@ -269,8 +271,7 @@ elseif(in_array( "exercise", array_keys($_GET))){
 	excercise($_GET["excercise"]);
 }
 
-
-//Put phpinfo() into array
+//get phpinfo() into array
 ob_start();
 phpinfo();
 $phpinfo = array('phpinfo' => array());
@@ -287,5 +288,4 @@ if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: cla
 print "<pre>";
 print_r($phpinfo);
 print "</pre>";
-
 ?>
