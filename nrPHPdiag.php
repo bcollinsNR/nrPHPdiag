@@ -286,12 +286,21 @@ if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: cla
 
 //phpinfo() in an array (we can focus on the New Relic section)
 print "<pre>";
-print_r($phpinfo);
+//print_r($phpinfo);
 
 //works
 //print_r($phpinfo['phpinfo']); //TODO: don't display $phpinfo['phpinfo'][0], or $phpinfo['phpinfo'][1]...
 //print_r($phpinfo['Apache Environment']);
 //print_r($phpinfo['PHP Variables']); //TODO: don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
+// there may be a few more sections / vars we need
+
+//output file:
+//Make sure it exists //same for daemon
+$folder = realpath('/var/log/newrelic');
+if(!$file = realpath($folder.'/'.$_GET['newrelic-agent.log']))
+    echo "found agent log file";
+if(!is_file($file))
+    echo "agent log file NOT found";
 
 print "</pre>";
 ?>
