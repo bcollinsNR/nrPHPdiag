@@ -287,5 +287,11 @@ if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: cla
 //phpinfo() in an array (we can focus on the New Relic section)
 print "<pre>";
 print_r($phpinfo);
+
+//works
+//print_r($phpinfo['phpinfo']); //TODO: don't display $phpinfo['phpinfo'][0], or $phpinfo['phpinfo'][1]...
+//print_r($phpinfo['Apache Environment']);
+//print_r($phpinfo['PHP Variables']); //TODO: don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
+
 print "</pre>";
 ?>
