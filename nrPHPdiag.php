@@ -41,6 +41,7 @@ print_r($phpinfo);
 //print_r($phpinfo['phpinfo']); //TODO: don't display $phpinfo['phpinfo'][0], or $phpinfo['phpinfo'][1]...
 //print_r($phpinfo['Apache Environment']);
 //print_r($phpinfo['PHP Variables']); //TODO: don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
+//print_r($phpinfo['<newrelic>']); //TODO: what is this name set to? 
 // there may be a few more sections we need, ask support team what they use
 
 //TODO: Steven is going to work on live logging
