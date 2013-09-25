@@ -17,25 +17,46 @@
 //
 // ***************************************************************************
 
-//Report all errors
+// Report all PHP errors
 error_reporting(E_ALL);
 
-//put phpinfo() into array
+// Get phpinfo() into array
 ob_start();
 phpinfo();
 $phpinfo = array('phpinfo' => array());
 if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER))
-    foreach($matches as $match)
-        if(strlen($match[1]))
-            $phpinfo[$match[1]] = array();
-        elseif(isset($match[3]))
-            $phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
-        else
-            $phpinfo[end(array_keys($phpinfo))][] = $match[2];
-//end get phpinfo()
+  foreach($matches as $match)
+    if(strlen($match[1]))
+        $phpinfo[$match[1]] = array();
+      elseif(isset($match[3]))
+        $phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
+      else
+        $phpinfo[end(array_keys($phpinfo))][] = $match[2];
 
+// Output diagnostic data
 print "<pre>";
-print_r($phpinfo);
+
+// Basic table of phpinfo() data
+
+
+echo '<table>';
+foreach ($phpinfo as $value1) {
+	foreach ($value1 as $key2 => $value2) {
+	    if (is_array($value2)) //gets local / active & master
+	    {
+	    	foreach ($value2 as $key3 => $value3) {
+	    		echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
+	    	}
+	    }  
+	    else
+	    {
+        	echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
+        }
+	}
+}
+echo '</table>';
+
+//print_r($phpinfo);
 
 //TODO: Only get what we need:
 //print_r($phpinfo['phpinfo']); //TODO: don't display $phpinfo['phpinfo'][0], or $phpinfo['phpinfo'][1]...
@@ -46,7 +67,7 @@ print_r($phpinfo);
 
 //TODO: Steven is going to work on live logging
 
-$numberOfLines = '2'; //TODO: add as customer input...
+$numberOfLines = '2'; //customer input? param could be simple way to implement...
 $tailCommand = 'tail -'.$numberOfLines;
 
 //TODO: Get the actual locations of the logs from config, for now assume default
