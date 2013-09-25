@@ -64,6 +64,11 @@ echo "<br />";echo "<br />";
 echo "<b>Daemon Log (".$tailCommand.")</b>";
 echo "<br />";
 passthru($tailCommand.' '.$daemonLogLocation);
-echo "<br />";
+
+//basic rum check
+echo "<br /><script>if(typeof NREUMQ != 'undefined')
+  document.write ('<b>RUM</b>'); //TODO: also output the var...
+else 
+  document.write ('<b>No RUM</b>');</script>";
 print "</pre>";
 ?>
