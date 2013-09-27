@@ -41,18 +41,18 @@ print "<pre>";
 
 echo '<table>';
 foreach ($phpinfo as $value1) {
-	foreach ($value1 as $key2 => $value2) {
-	    if (is_array($value2)) //gets local / active & master
-	    {
-	    	foreach ($value2 as $key3 => $value3) {
-	    		echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
-	    	}
-	    }  
-	    else
-	    {
-        	echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
+  foreach ($value1 as $key2 => $value2) {
+      if (is_array($value2)) //gets local / active & master
+      {
+        foreach ($value2 as $key3 => $value3) {
+          echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
         }
-	}
+      }  
+      else
+      {
+          echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
+        }
+  }
 }
 echo '</table>';
 
@@ -86,10 +86,30 @@ echo "<b>Daemon Log (".$tailCommand.")</b>";
 echo "<br />";
 passthru($tailCommand.' '.$daemonLogLocation);
 
-//basic rum check
-echo "<br /><script>if(typeof NREUMQ != 'undefined')
-  document.write ('<b>RUM</b>'); //TODO: also output the var...
-else 
-  document.write ('<b>No RUM</b>');</script>";
+// basic rum check
+echo "<br />
+<script>
+  if(typeof NREUMQ != 'undefined')
+  {
+    document.write ('<b>RUM</b>');
+    document.write (NREUMQ);
+  }
+  else 
+    document.write ('<b>No RUM</b>');</script>";
+
+// basic request queueing check
+echo '<br /><br />';
+echo '<b>Request Queuing</b>';
+echo '<br />';
+
+if (array_key_exists('HTTP_X_REQUEST_START', $_SERVER))
+{
+  echo "Yes:";
+  echo $_SERVER["HTTP_X_REQUEST_START"];
+}
+else {
+  echo "No";
+}
+
 print "</pre>";
 ?>
