@@ -5,9 +5,9 @@ New Relic PHP Agent Diagnostic Tool
 
 - [x] Agent and daemon logs 
 - [x] RUM
-- [ ] Full license key
+- [x] Request queuing
 - [ ] Show relevent phpinfo()
+- [ ] Full license key
 - [ ] Daemon processes  
-- [ ] Request queing
 - [ ] Firewall
 - [ ] OS security
