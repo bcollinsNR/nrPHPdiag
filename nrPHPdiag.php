@@ -33,41 +33,33 @@ if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: cla
       else
         $phpinfo[end(array_keys($phpinfo))][] = $match[2];
 
-// Output diagnostic data
+// Begin output of diagnostic data
 print "<pre>";
 
-// Basic table of phpinfo() data
-
-
+// Basic table of phpinfo() data 
+// TODO: This will be trimmed down considerably to just what we need
 echo '<table>';
 foreach ($phpinfo as $value1) {
   foreach ($value1 as $key2 => $value2) {
-      if (is_array($value2)) //gets local / active & master
-      {
-        foreach ($value2 as $key3 => $value3) {
-          echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
-        }
-      }  
-      else
-      {
-          echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
-        }
+    if (is_array($value2)) {
+      foreach ($value2 as $key3 => $value3) {
+        echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
+      }
+    }  
+    else {
+      echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
+    }
   }
 }
 echo '</table>';
 
-//print_r($phpinfo);
-
-//TODO: Only get what we need:
-//print_r($phpinfo['phpinfo']); //TODO: don't display $phpinfo['phpinfo'][0], or $phpinfo['phpinfo'][1]...
+//print_r($phpinfo['phpinfo']); //don't display $phpinfo['phpinfo'][0] & $phpinfo['phpinfo'][1]
 //print_r($phpinfo['Apache Environment']);
-//print_r($phpinfo['PHP Variables']); //TODO: don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
-//print_r($phpinfo['<newrelic>']); //TODO: what is this name set to? 
-// there may be a few more sections we need, ask support team what they use
+//print_r($phpinfo['PHP Variables']); //don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
+//print_r($phpinfo['<newrelic>']); //what is this name set to? 
+//there may be a few more sections we need
 
-//TODO: Steven is going to work on live logging
-
-$numberOfLines = '2'; //customer input? param could be simple way to implement...
+$numberOfLines = '2'; //customer input? param could be simple way to implement this if this need to be customizable
 $tailCommand = 'tail -'.$numberOfLines;
 
 //TODO: Get the actual locations of the logs from config, for now assume default
@@ -83,25 +75,23 @@ echo "<br />";
 passthru($tailCommand.' '.$agentLogLocation);
 echo "<br />";echo "<br />";
 echo "<b>Daemon Log (".$tailCommand.")</b>";
+
 echo "<br />";
 passthru($tailCommand.' '.$daemonLogLocation);
-
-// basic rum check
-echo "<br />
-<script>
-  if(typeof NREUMQ != 'undefined')
-  {
-    document.write ('<b>RUM</b>');
+// Basic RUM check
+echo "<br /><script>
+  if(typeof NREUMQ != 'undefined') {
+    document.write ('<b>RUM</b><br />');
     document.write (NREUMQ);
+    document.write ('<br />');
   }
   else 
     document.write ('<b>No RUM</b>');</script>";
 
-// basic request queueing check
+// Basic request queueing header check
 echo '<br /><br />';
 echo '<b>Request Queuing</b>';
 echo '<br />';
-
 if (array_key_exists('HTTP_X_REQUEST_START', $_SERVER))
 {
   echo "Yes:";
