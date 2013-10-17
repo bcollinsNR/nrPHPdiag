@@ -88,6 +88,26 @@ echo "<br /><script>
   else 
     document.write ('<b>No RUM</b>');</script>";
 
+
+
+  /*
+From PHP test tools:
+<script>
+if (document.documentElement.innerHTML.search("NREUMQ=NREUMQ")) {
+  document.write("<b>Test Passed, found RUM header.</b><br>\n");
+} else {
+  document.write("<b>Test Failed, didn't find RUM header.</b><br>\n");
+}
+
+if (document.documentElement.innerHTML.search("NREUMQ.f=function")) {
+  document.write("<b>Test Passed, found RUM footer.</b><br>\n");
+} else {
+  document.write("<b>Test Failed, didn't find RUM footer.</b><br>\n");
+}
+</script>
+
+  */
+
 // Basic request queueing header check
 echo '<br /><br />';
 echo '<b>Request Queuing</b>';
