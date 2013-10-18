@@ -8,5 +8,5 @@ New Relic PHP Agent Diagnostic Tool
 - [x] Request queuing
 - [ ] Show relevent phpinfo()
 - [ ] Daemon processes  
-- [ ] Firewall
+- [x] Firewall
 - [ ] OS security
