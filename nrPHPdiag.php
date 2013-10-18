@@ -20,6 +20,42 @@
 // Report all PHP errors
 error_reporting(E_ALL);
 
+// CURL Firewall check:
+if (!function_exists('curl_init')){
+  die('Sorry cURL is not installed!');
+}
+else
+{
+  echo "cURL installed.";
+  echo '<br />';
+
+  echo "Non-SSL:";
+  echo '<br />';
+  
+  $ch = curl_init();
+  // Set URL to download
+  curl_setopt($ch, CURLOPT_URL, "http://collector.newrelic.com/status/mongrel");
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);    
+  curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+  $output = curl_exec($ch);
+  curl_close($ch);
+  echo '.<br />';
+  echo "SSL:";
+  echo '<br />';
+
+  $ch = curl_init();
+  // Set URL to download
+  curl_setopt($ch, CURLOPT_URL, "https://collector.newrelic.com/status/mongrel");
+  curl_setopt($ch, CURLOPT_HEADER, 0);
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, false);    
+  curl_setopt($ch, CURLOPT_TIMEOUT, 20);
+  $output = curl_exec($ch);
+  curl_close($ch);
+
+  echo '.<br />';
+}
+
 // Only run if localhost 
 if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
 
