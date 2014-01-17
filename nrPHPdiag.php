@@ -1,8 +1,14 @@
 <?php
+if (extension_loaded('newrelic')) {
+  echo 'Test API succesful';
+  //newrelic_name_transaction('newTransaction');
+  //newrelic_end_transaction();
 
+  //newrelic_start_transaction('PHPDiagnosticTool');
+}
 // ******************************** New Relic ********************************
 //
-// PHP Agent Diagnostic Tool v 0.4.2
+// PHP Agent Diagnostic Tool v 0.5 a
 // Author: Brian Collins, Steven Minor
 //
 // ***************************************************************************
@@ -17,16 +23,19 @@
 //
 // ***************************************************************************
 
-// Report all PHP errors
+// Report all PHP errors on this page
 error_reporting(E_ALL);
+
+//kiss
+phpinfo();
 
 // CURL Firewall check:
 if (!function_exists('curl_init')){
-  die('Sorry cURL is not installed!');
+  echo 'Sorry cURL is not installed!';
 }
-else
+else 
 {
-  echo "cURL installed.";
+  echo 'cURL installed.';
   echo '<br />';
 
   echo "Non-SSL:";
@@ -56,49 +65,10 @@ else
   echo '.<br />';
 }
 
-// Only run if localhost 
-if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
+// Only get logs if localhost or
+if ($_SERVER["HTTP_HOST"] == '127.0.0.1' || 'localhost') {
 
-  // Get phpinfo() into array
-  ob_start();
-  phpinfo();
-  $phpinfo = array('phpinfo' => array());
-  if(preg_match_all('#(?:<h2>(?:<a name=".*?">)?(.*?)(?:</a>)?</h2>)|(?:<tr(?: class=".*?")?><t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>(?:<t[hd](?: class=".*?")?>(.*?)\s*</t[hd]>)?)?</tr>)#s', ob_get_clean(), $matches, PREG_SET_ORDER))
-    foreach($matches as $match)
-      if(strlen($match[1]))
-          $phpinfo[$match[1]] = array();
-        elseif(isset($match[3]))
-          $phpinfo[end(array_keys($phpinfo))][$match[2]] = isset($match[4]) ? array($match[3], $match[4]) : $match[3];
-        else
-          $phpinfo[end(array_keys($phpinfo))][] = $match[2];
-
-  // Begin output of diagnostic data
-  print "<pre>";
-
-  // Basic table of phpinfo() data 
-  // TODO: This will be trimmed down considerably to just what we need
-  echo '<table>';
-  foreach ($phpinfo as $value1) {
-    foreach ($value1 as $key2 => $value2) {
-      if (is_array($value2)) {
-        foreach ($value2 as $key3 => $value3) {
-          echo '<tr><td>'.$key3.'</td><td>'.$value3.'</td></tr>';
-        }
-      }  
-      else {
-        echo '<tr><td>'.$key2.'</td><td>'.$value2.'</td></tr>';
-      }
-    }
-  }
-  echo '</table>';
-
-  //print_r($phpinfo['phpinfo']); //don't display $phpinfo['phpinfo'][0] & $phpinfo['phpinfo'][1]
-  //print_r($phpinfo['Apache Environment']);
-  //print_r($phpinfo['PHP Variables']); //don't display $phpinfo['PHP Variables']['_SERVER["argv"]']
-  //print_r($phpinfo['<newrelic>']); //what is this name set to? 
-  //there may be a few more sections we need
-
-  $numberOfLines = '2'; //customer input? param could be simple way to implement this if this need to be customizable
+  $numberOfLines = '50'; //customer input? param could be simple way to implement this if this need to be customizable
   $tailCommand = 'tail -'.$numberOfLines;
 
   //TODO: Get the actual locations of the logs from config, for now assume default
@@ -111,56 +81,45 @@ if ($_SERVER['REMOTE_ADDR'] == '127.0.0.1') {
   $daemonLogLocation = $defaultDaemonLogLocation;
   echo "<b>Agent Log (".$tailCommand.")</b>";
   echo "<br />";
+  echo "<pre>";
   passthru($tailCommand.' '.$agentLogLocation);
+  echo "</pre>";
   echo "<br />";echo "<br />";
   echo "<b>Daemon Log (".$tailCommand.")</b>";
-
   echo "<br />";
+  echo "<pre>";
   passthru($tailCommand.' '.$daemonLogLocation);
-  // Basic RUM check
+  echo "</pre>";
+}
+else
+{
+  echo "Log access denied: non-local request detected.";
+}
+
+// Basic RUM check
   echo "<br /><script>
-    if(typeof NREUMQ != 'undefined') {
-      document.write ('<b>RUM</b><br />');
-      document.write (NREUMQ);
-      document.write ('<br />');
+    document.write ('<br />==========================================<br /><b>RUM</b><br />');
+    if (typeof NREUM != 'undefined') { 
+      document.write ('</b>Yep.</b><br />==========================================<br />');
     }
     else 
-      document.write ('<b>No RUM</b>');</script>";
-
-
-  /*
-  // From PHP test tools: this checks for both header and footer.
-  <script>
-  if (document.documentElement.innerHTML.search("NREUMQ=NREUMQ")) {
-    document.write("<b>Test Passed, found RUM header.</b><br>\n");
-  } else {
-    document.write("<b>Test Failed, didn't find RUM header.</b><br>\n");
-  }
-
-  if (document.documentElement.innerHTML.search("NREUMQ.f=function")) {
-    document.write("<b>Test Passed, found RUM footer.</b><br>\n");
-  } else {
-    document.write("<b>Test Failed, didn't find RUM footer.</b><br>\n");
-  }
-  </script>
-  */
+      document.write ('<b>Nope.</b><br />==========================================<br />');</script>";
 
   // Basic request queueing header check
-  echo '<br /><br />';
+  echo '<br />==========================================<br />';
   echo '<b>Request Queuing</b>';
   echo '<br />';
   if (array_key_exists('HTTP_X_REQUEST_START', $_SERVER))
   {
-    echo "Yes:";
-    echo $_SERVER["HTTP_X_REQUEST_START"];
+    echo '<b>Yep: </b>';
+    echo '$_SERVER["HTTP_X_REQUEST_START"] =' . $_SERVER["HTTP_X_REQUEST_START"];
+    echo '<br />==========================================<br /><br /><br />';
   }
   else {
-    echo "No";
+    echo '<b>Nope.</b><br />==========================================<br /><br /><br />';
   }
-  print "</pre>";
+
+if (extension_loaded('newrelic')) {
+  //newrelic_name_transaction('nameItAsLateAsPossible');
+  //newrelic_end_transaction();
 }
-else
-{
-  echo "Access denied: non-local request detected.";
-}
-?>
